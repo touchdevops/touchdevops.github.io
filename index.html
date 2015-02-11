@@ -1,0 +1,153 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="Cloud &amp; DevOps" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Cloud &amp; DevOps</title><link rel="stylesheet" href="/css/main.css" type="text/css">
+<!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Cloud &amp; DevOps</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><span class="post__time">墨鱼</span><span class="post__time"> @ </span><time datetime="2015-02-11T01:56:56.000Z" class="post__time">February 11, 2015</time><h1 class="post__title"><a href="/2015/02/11/openstack-novnc/">openstack novnc实现</a></h1></header><div class="post__main echo"><h2 id="概述">概述</h2>
+<p>对于使用过OpenStack的用户，我们第一次操作虚拟机都可能是直接通过OpenStack Dashbord管理控制台提供的Web vnc来进行使用。</p>
+<p>如图所示，我们可以很方便的使用该功能，对虚拟机进行管理和配置；</p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/OpenStack/" class="post__tag__link">OpenStack</a></li></ul><a href="/2015/02/11/openstack-novnc/#more" class="post__more u-fr">READ MORE</a></footer></article><article class="post"><header class="post__head"><span class="post__time">黄博文</span><span class="post__time"> @ </span><time datetime="2015-01-17T15:23:15.000Z" class="post__time">January 17, 2015</time><h1 class="post__title"><a href="/2015/01/17/create-nat-node-in-aws/">在AWS中创建NAT节点</a></h1></header><div class="post__main echo"><p>NAT, Network Address Translation,即网络地址转换。当内部网络的主机想要访问外网，但是又不想直接暴露给公网，可以通过NAT节点来访问外网。这样做有两个好处，第一是内网的主机无需拥有公网IP就可访问网络（NAT节点需要公网IP），节约了公网IP；第二是内网的主机由于没有公网IP，所以公网的电脑无法访问到它，这样就可以隐藏自己。一个很经典的示例是假如你有一台数据库服务器放置在内网中，为在同一个内网中的web服务器提供数据服务，为了安全性考虑你不会把它直接暴露在公网中。但是数据库服务器有时候自己是需要访问公网的，比如需要升级数据库服务器中的某些软件等。采用NAT方案可以很好的解决这个问题。</p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/AWS/" class="post__tag__link">AWS</a></li><li class="post__tag__item"><a href="/tags/CloudFormation/" class="post__tag__link">CloudFormation</a></li><li class="post__tag__item"><a href="/tags/NAT/" class="post__tag__link">NAT</a></li></ul><a href="/2015/01/17/create-nat-node-in-aws/#more" class="post__more u-fr">READ MORE</a></footer></article><article class="post"><header class="post__head"><span class="post__time">David Xie</span><span class="post__time"> @ </span><time datetime="2014-12-29T16:00:00.000Z" class="post__time">December 30, 2014</time><h1 class="post__title"><a href="/2014/12/30/kill-containers-in-docker/">Kill containers in Docker</a></h1></header><div class="post__main echo"><p>After using Docker for a while, you may find out there are so many containers in stopped status, and they are not deleted. You can delete them one by one with <code>docker rm</code>, but we are developers, how can we bear this?</p>
+<p>Thank god Docker provides a parameter named <code>-q</code> in <code>docker ps</code> command to just print container IDs on console.</p>
+<ul>
+<li>Delete all stopped containers</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor"># docker rm $(docker ps -f status=stopped -q)</span></div></pre></td></tr></table></figure>
+
+<ul>
+<li>Delete all containers</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># docker rm -f $(docker ps -a -q)</span></div></pre></td></tr></table></figure>
+
+<p>Isn’t it cool? If not, make some alias for this, like</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias drma=docker rm <span class="operator">-f</span> $(docker ps <span class="operator">-a</span> -q)</div></pre></td></tr></table></figure>
+
+<p>That’s how it’s done!</p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Cloud/" class="post__tag__link">Cloud</a></li><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li></ul><a href="/2014/12/30/kill-containers-in-docker/#disqus_thread" class="post__foot-link u-fr">0 COMMENTS</a></footer></article><article class="post"><header class="post__head"><span class="post__time">黄博文</span><span class="post__time"> @ </span><time datetime="2014-12-26T06:19:34.000Z" class="post__time">December 26, 2014</time><h1 class="post__title"><a href="/2014/12/26/shutdown-ec2-at-certain-time/">定时关闭AWS上的EC2机器实例</a></h1></header><div class="post__main echo"><p>最近一段时间在做一个产品从阿里云向亚马逊云中国区迁移的前期试验。亚马逊中国区并没有开放免费体验账号，使用的每一份资源都要实打实的掏钱。而为了实验我们使用时一般要启动好几台EC2实例。为了不浪费辛辛苦苦赚的钱，特写了一个脚本，在每天晚上6点将所有的EC2实例自动关闭。由于在亚马逊云中关闭的EC2实例是不收费的，只收取少量的存储费用，所以这样节省不少钱。</p>
+</div><footer class="post__foot u-cf"><a href="/2014/12/26/shutdown-ec2-at-certain-time/#more" class="post__more u-fr">READ MORE</a></footer></article><article class="post"><header class="post__head"><span class="post__time">黄博文</span><span class="post__time"> @ </span><time datetime="2014-11-24T16:12:11.000Z" class="post__time">November 25, 2014</time><h1 class="post__title"><a href="/2014/11/25/AWS-reInvent-2014/">AWS reInvent 2014</a></h1></header><div class="post__main echo"><p>亚马逊在2014年11月11-14日的拉斯维加斯举行了一年一度的re:Invent大会。在今年的大会上，亚马逊一股脑发布和更新了很多服务。现在就由我来带领大家了解一下这些新服务。</p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/AWS/" class="post__tag__link">AWS</a></li></ul><a href="/2014/11/25/AWS-reInvent-2014/#more" class="post__more u-fr">READ MORE</a></footer></article><article class="post"><header class="post__head"><span class="post__time">Lin Fan</span><span class="post__time"> @ </span><time datetime="2014-11-05T01:58:33.000Z" class="post__time">November 5, 2014</time><h1 class="post__title"><a href="/2014/11/05/walking-on-cloud-creating-coreos-cluster-part-2/">行走在云端：构建CoreOS集群 – 第二步 架设CoreOS集群</a></h1></header><div class="post__main echo"><p>CoreOS 集群的架设比架设一个传统服务器集群更加容易。一方面因为 CoreOS 使用了 Cloud-init 自动化了集群信息的配置，另一方面则是受益于 etcd 分布式存储实现的消息分发和服务器自发现机制。这些便利性正是 CoreOS 系统设计充分为集群架构考虑带来的效率提升。</p>
+<h2 id="安装_CoreOS">安装 CoreOS</h2>
+<p>CoreOS 的安装方法和传统 Linux 系统有很大的不同。官方提供的<a href="https://coreos.com/docs/running-coreos/platforms/iso/" target="_blank" rel="external"><u>系统 ISO 镜像文件</u></a>实际上只是一个 Live CD，也就免安装的试用镜像，这个 ISO 所提供的系统是不具备服务自发现和分布式消息分发的能力的。</p>
+<p>正如<a href="http://the-1.net/walking-on-cloud-creating-coreos-cluster-part-1" target="_blank" rel="external">前一篇博客</a>所提到的，Cloud-init 通常依赖于具体平台的实现定制，将其直接在物理机上使用并不是主流的使用方法。对于这种安装方法，官方的<a href="https://coreos.com/docs/running-coreos/bare-metal/installing-to-disk/" target="_blank" rel="external"><u>这篇文档</u></a>提供了详细的步骤，这里不再进行详细讨论。</p>
+<p>首先来看一下 CoreOS 原生支持的平台。截止到版本 CoreOS v472，已经支持的平台如下图。</p>
+<p><img src="/images/CoreOS_download.png" alt="Download"></p>
+<p>可以看到除去安装到本地的 Bare Metal，其余基本是针对主流的云服务平台定制的版本。这里的定制主要是 Cloud-init 等启动服务的配置，那么如何知道 CoreOS 已经支持自动化的集群部署的平台有哪些呢？我们可以从 CoreOS 源代码的 coreos-base 目录里得到答案。</p>
+<p>链接地址：<a href="https://github.com/coreos/coreos-overlay/tree/master/coreos-base" target="_blank" rel="external">https://github.com/coreos/coreos-overlay/tree/master/coreos-base</a><br><img src="/images/CoreOS_Supported_Platform.png" alt="OEM]"></p>
+<p>这些 oem 开头的目录就是平台定制的实现。其中每个目录中的 files/cloud-config.yml 文件，就是 Cloud-init 的配置文件。在每一种平台安装 CoreOS 的方式各有不同，可以从官方网站相应的页面找到相应步骤。这里我们选择其中的 Vagrant 作为演示的目标平台。</p>
+<h2 id="在_Vagrant_上部署_CoreOS_集群">在 Vagrant 上部署 CoreOS 集群</h2>
+<p>使用 Vagrant 建立 CoreOS 集群可以说是最简单且经济的方式了，使用本地虚拟机构建，特别适合快速验证 CoreOS 的功能 :cool: 。</p>
+<ul>
+<li><h3 id="预备">预备</h3>
+</li>
+</ul>
+<p>需要准备的东西，包括一台连接到互联网的 Mac 或者桌面 Linux 电脑，安装好 <a href="http://git-scm.com" target="_blank" rel="external">Git</a>、<a href="https://www.virtualbox.org" target="_blank" rel="external">VirtualBox</a> 和 <a href="https://www.vagrantup.com" target="_blank" rel="external">Vagrant</a>。 </p>
+<p>通过 Git 下载官方的 Vagrant 仓库：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/coreos/coreos-vagrant.git</div></pre></td></tr></table></figure>
+
+<p>下载完成后，我们接下来配置 CoreOS 集群。</p>
+<ul>
+<li><h3 id="配置">配置</h3>
+</li>
+</ul>
+<p>为了使用集群服务器的自发现功能，我们需要一个能用来唯一标识一个集群并提供集群信息的地址。CoreOS 官方提供了这个服务，当然我们也可以使用自己搭建的私有集群标识服务器，参考<a href="https://registry.hub.docker.com/u/digitalism/discovery.etcd.io/" target="_blank" rel="external"><u>这个 Docker Repo</u></a>以及<a href="https://github.com/digitalism/discovery.etcd.io" target="_blank" rel="external"><u>它的源码</u></a>，也可以直接使用<a href="https://github.com/coreos/discovery.etcd.io" target="_blank" rel="external"><u>官方的源代码</u></a>。通过浏览器或命令行 curl 访问地址 <a href="https://discovery.etcd.io/new" target="_blank" rel="external">https://discovery.etcd.io/new</a> 可以得到一个新的集群标识 URL，这个 URL 会在配置 user-data 时候使用到。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl http<span class="variable">s:</span>//discovery.etcd.io/<span class="keyword">new</span></div></pre></td></tr></table></figure>
+
+<p>进入 coreos-vagrant 目录，将 user-data.sample 和 config.rb.sample 两个文件各拷贝一份，并去掉 .sample 后缀。得到 user-data 和 config.rb 文件。</p>
+<p>首先修改 user-data 文件，它将作为启动的配置文件提供给 CoreOS 操作系统。值得一提的是，在这个配置中，可以使用两个变量 $private_ipv4 和 $public_ipv4，它们会在实际运行的时候被自动替换为主机的真实外网 IP 和内网 IP 地址。</p>
+<p>这里我们需要做的仅仅是将其中 <cluster-url> 所在行的 URL 替换为之前获得的集群标识 URL 地址。简单来说，所有使用了同一个标识 URL 的主机实例都会在 CoreOS 启动时自动加入到同一个集群中，这就实现了无需人工干预的集群服务器自发现。</cluster-url></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="variable">#cloud</span><span class="attribute">-config</span></div><div class="line"></div><div class="line">coreos:</div><div class="line">  etcd:</div><div class="line">      discovery: <span class="subst">&</span><span class="literal">lt</span>;cluster<span class="attribute">-url</span><span class="subst">&</span><span class="literal">gt</span>;</div><div class="line">      addr: <span class="variable">$public_ipv4</span>:<span class="number">4001</span></div><div class="line">      peer<span class="attribute">-addr</span>: <span class="variable">$public_ipv4</span>:<span class="number">7001</span></div><div class="line">  fleet:</div><div class="line">      <span class="keyword">public</span><span class="attribute">-ip</span>: <span class="variable">$public_ipv4</span></div><div class="line">  units:</div><div class="line">    <span class="subst">-</span> name: etcd<span class="built_in">.</span>service</div><div class="line">      command: start</div><div class="line">    <span class="subst">-</span> name: fleet<span class="built_in">.</span>service</div><div class="line">      command: start</div></pre></td></tr></table></figure>
+
+<p>然后修改 config.rb 文件，这里包含了 Vagrant 虚拟机的配置。通过这个文件实际上可以覆写任何 Vagrantfile 里的参数，但是目前我们只需要关注 $num_instances 和 $update_channel 这两个参数的值。</p>
+<ul>
+<li>$num_instances 表示将启动的 CoreOS 集群中需要包含主机实例的数量。</li>
+<li>$update_channel 表示启动的 CoreOS 实例使用的升级通道，可以是 ‘stable’，’beta’ 或 ‘alpha’。</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$num_instances</span>=<span class="number">3</span></div><div class="line"><span class="variable">$update_channel</span>=<span class="string">'stable'</span></div></pre></td></tr></table></figure>
+
+<p>CoreOS 没有跨越式的版本发布，而是使用与 Arch Linux 类似的平滑的滚动升级，确保用户任何时候下载到的版本都是最新发布的系统镜像，并且从根本上解决了服务器系统在运行几年后，由于无法平滑升级而被迫重新安装的情况。此外 CoreOS 提供了 Stable、Beta 和 Alpha 三种升级通道，用于满足不同用户对系统新特性和稳定性的平衡。关于升级通道的切换，可参考<a href="https://coreos.com/docs/cluster-management/setup/switching-channels/" target="_blank" rel="external"><u>官方的文档</u></a>。</p>
+<ul>
+<li><h3 id="启动">启动</h3>
+</li>
+</ul>
+<p>启动集群，执行：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vagrant <span class="keyword">up</span></div></pre></td></tr></table></figure>
+
+<p>查看集群运行状态，所有的集群实例都已经启动。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">vagrant status</div><div class="line"></div><div class="line">Current machine states:</div><div class="line">core-<span class="number">01</span>                   <span class="property">running</span> (virtualbox)</div><div class="line">core-<span class="number">02</span>                   <span class="property">running</span> (virtualbox)</div><div class="line">core-<span class="number">03</span>                   <span class="property">running</span> (virtualbox)</div></pre></td></tr></table></figure>
+
+<p>此时，在 CoreOS 集群的内部正发生着许多故事，集群的实例之间通过自发现服务，相互认识了对方并建立了联系。它们具备了在集群中任意一个实例节点控制整个集群的能力。是的，一个功能完备的 CoreOS 服务器集群已经完全运行起来了。</p>
+<h2 id="探索_CoreOS">探索 CoreOS</h2>
+<p>在下一部分，我们将会进入启动完成的 CoreOS 实例中，继续探索其中的奥秘。</p>
+<h2 id="参考文章">参考文章</h2>
+<ul>
+<li><a href="https://coreos.com/docs/running-coreos/platforms/vagrant/" target="_blank" rel="external">Running CoreOS on Vagrant</a></li>
+</ul>
+</div><footer class="post__foot u-cf"><a href="/2014/11/05/walking-on-cloud-creating-coreos-cluster-part-2/#disqus_thread" class="post__foot-link u-fr">0 COMMENTS</a></footer></article><article class="post"><header class="post__head"><span class="post__time">黄博文</span><span class="post__time"> @ </span><time datetime="2014-10-30T05:42:22.000Z" class="post__time">October 30, 2014</time><h1 class="post__title"><a href="/2014/10/30/using-jaxb-in-gradle/">在Gradle中使用jaxb</a></h1></header><div class="post__main echo"><p>jaxb，全称为Java Architecture for Xml Binding,是一种将java对象与xml建立起映射的技术。其主要提供两个功能，一是将java对象映射为xml，二是将xml映射为java对象。JAXB有1.0版和2.0版。2.0版对应的JSR（Java specification request, java规格要求）是JSR 222。jaxb中的xjc工具能够将XML Schema转换为对应的java类。支持的XML类型包括XML DTD，XSD以及WSDL。而schemagen工具则可以将具有相应annotation标记的java类转换为XML结构。</p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Gradle/" class="post__tag__link">Gradle</a></li><li class="post__tag__item"><a href="/tags/CI/" class="post__tag__link">CI</a></li><li class="post__tag__item"><a href="/tags/Jaxb/" class="post__tag__link">Jaxb</a></li></ul><a href="/2014/10/30/using-jaxb-in-gradle/#more" class="post__more u-fr">READ MORE</a></footer></article><article class="post"><header class="post__head"><span class="post__time">黄博文</span><span class="post__time"> @ </span><time datetime="2014-10-30T03:13:25.000Z" class="post__time">October 30, 2014</time><h1 class="post__title"><a href="/2014/10/30/build-script-in-gradle/">Gradle中的buildScript代码块</a></h1></header><div class="post__main echo"><p>在编写Gradle脚本的时候，在build.gradle文件中经常看到这样的代码：</p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Gradle/" class="post__tag__link">Gradle</a></li><li class="post__tag__item"><a href="/tags/Build/" class="post__tag__link">Build</a></li></ul><a href="/2014/10/30/build-script-in-gradle/#more" class="post__more u-fr">READ MORE</a></footer></article><article class="post"><header class="post__head"><span class="post__time">Lin Fan</span><span class="post__time"> @ </span><time datetime="2014-10-29T00:32:06.000Z" class="post__time">October 29, 2014</time><h1 class="post__title"><a href="/2014/10/29/walking-on-cloud-creating-coreos-cluster-part-1/">行走在云端：构建CoreOS集群 – 第一步 CoreOS俯瞰</a></h1></header><div class="post__main echo"><p><img src="/images/coreos-wordmark-horiz-color.png" alt="CoreOS"></p>
+<p>第一次看到 CoreOS 是在今年7月底关于 CoerOS 首个稳定版本发布的新闻上，当时吸引我的并不是 CoreOS 本身，而是因为这是一个对 Docker 原生支持的系统。而这个系统的名字，连同它的 Logo，在当时并没有给我留下太多的印象。</p>
+<p>直到在后来对 CoreOS 有了更多接触以后，我才渐渐的发现它远不仅是“又一个Linux发行版”那么简单，而是一个与传统 Linux 系统神似而形不同，在理念上颇具颠覆性的操作系统。</p>
+<p>这篇系列教程将关注 CoreOS 系统的这些独到之处，使得没有接触过这个系统的用户能够快速的理解其中功能的精华和推荐的实践方法。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">从万米高空俯瞰，首先引入眼帘是的一个最基本的问题</div></pre></td></tr></table></figure>
+
+<h2 id="CoreOS_是什么">CoreOS 是什么</h2>
+<p>简单的说，它是一种基于 Chrome OS 再定制的轻量级 Linux 发行版本。</p>
+<p>作为一个操作系统，CoreOS 采用了高度精简的系统内核及外围定制，将许多原本需要复杂人工操作或者第三方软件支持的功能在操作系统级别进行了实现，同时剔除了其他对于服务器系统非核心的软件，比如GUI和包管理器。</p>
+<p>特别值得一提的是 CoreOS 对包管理器的态度和 Docker 的原生支持。这是许多习惯了传统 Linux 管理方式的用户在刚接触 CoreOS 时，最不习惯的地方，因为 CoreOS 没有提供现成的包管理工具。一个典型的困惑是：在 CoreOS 安装软件太不方便了。事实上 CoreOS 并不鼓励用户将各种应用软件直接安装在操作系统之上，而是提倡将所有服务运行在单独的应用容器中，由应用容器提供应用所需要的基础功能环境。这种做法将操作系统和应用程序的职责做了更彻底的分离，降低操作系统和应用程序的耦合度，使运行这些服务器的公司可以更快速、更廉价地更新自己的线上业务。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">至上而下，落到千米高空，隐约的看见它的轮廓</div></pre></td></tr></table></figure>
+
+<h2 id="CoreOS_行走在云端">CoreOS 行走在云端</h2>
+<p>毫不夸张的说，CoreOS 是为云而生的操作系统。</p>
+<p>这个“为云而生”包含两层含义。首先，CoreOS 的设计立足点充分的考虑了云端生态系统的分布式部署、大规模伸缩扩展(Scaling)需求，我们将会再后面的内容中充分体会到这一点。另一方面，CoreOS 对特定的云环境也有相当的依赖，其启动配置服务 cloud-init 是需要高度定制化的，CoreOS 官方提供了基于 AZure、AWS、RackSpace、Vagrant、VMWare 等虚拟机或云服务提供商的定制版本，因此本地直接通过 ISO 安装的 CoreOS 则无法获得 cloud-init 相关的功能，比如集群的自发现和fleet的跨主机管理。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">继续打望，来说一个正经事儿</div></pre></td></tr></table></figure>
+
+<h2 id="CoreOS_的用户体验">CoreOS 的用户体验</h2>
+<p>CoreOS 的核心思想来自于 Chrome 浏览器的用户体验：快速启动，后台更新，跨版本无缝更新，每个Tab页采用独立沙盒，单个Tab页崩溃能快速修复，整个浏览器也不会因为单个沙盒进程的崩溃而崩溃。引申到服务器上，试想将一个应用托管在应用容器中的服务从一个服务器转移到另一个服务器上，就像用鼠标将 Tab 页从一个浏览器拖拽到另一个浏览器界面上那样简单。而这些，正是 CoreOS 希望带给每一个用户的体验。</p>
+<ul>
+<li><h3 id="更快的启动速度">更快的启动速度</h3>
+</li>
+</ul>
+<p>因为轻，所以快。做为现代网络的服务器的产物，CoreOS 团队对这个服务器操作系统做了最大的精简，结果不仅使得系统与应用高度分离，更获得了极大的启动速度提升。根据官方数据，其系统运行时内存使用量只有114M，只有常见 Linux 服务器系统的一半略多 (约60%)。</p>
+<p>此外，CoreOS 使用经 Mac 系统 launchd 的启发而开发的 Systemd 作为默认系统启动和服务管理器 (CentOS 7 也使用 Systemd 取代了过去的 SysV 启动服务)。与 SysV 相比，Systemd 不但可以更好的追踪系统进程，而且也具备优秀的并行化处理能力，加之按需启动等特点，并结合 Docker 的快速启动能力，在 CoreOS 集群中大规模部署 Docker Containers 与使用其他操作系统相比在性能上的优势将更加明显。</p>
+<ul>
+<li><h3 id="平滑版本升级">平滑版本升级</h3>
+</li>
+</ul>
+<p>传统的服务器操作系统，包括大多数Linux发行版，每隔几年都会更换。在这期间，开发者会不断用安全补丁和更新完善这个系统，但是不会进行特别大的改动，最终这个操作系统以及其上的软件会慢慢僵化。但是 CoreOS 的思想是成为一个随时可被更新的操作系统，其本身没有跨发布版本升级的概念，而是使用了类似 Arch Linux 的升级通道(Update Channel)和滚动更新的方式，在任何时候系统都能够直接升级成最新的发布版本。甚至在整个更新的过程中，应用程序的运行不会被打断。有了 CoreOS，基础架构会自动升级，就像无需用户操心的 Chrome 浏览器升级一样。</p>
+<p>CoreOS 有两个系统分区 (dual root partition 有些地方翻译为双启动分区，这里实际上应该是系统分区，包括 /bin /sbin /lib 等目录，这些目录都是只读的)。两个分区分别被设置成主动模式和被动模式并在系统运行期间各司其职。主动分区负责系统运行，被动分区负责系统升级。一旦新版本的操作系统被发布，一个完整的系统文件将被下载至被动分区，并在系统下一次重启时从新版本分区启动，原来的被动分区将切换为主动分区，而之前的主动分区则被切换为被动分区。这个个过程中，被更新的机器不需要从负载集群中移除。同时，为了保证其它应用程序不被打断，CoreOS 会通过 Linux cgroups 限制更新过程中的硬盘和网络I/O。</p>
+<p>这里值得一提的是，与传统 Linux 服务器不同，CoreOS 的系统分区被设计成在系统运行期间保持只读状态，这样确保了 CoreOS 的安全性，也进一步体现了 CoreOS 不希望用户将应用软件直接安装在操作系统上的态度。同时，集群内高度一致的系统内核和外围应用版本，简化了由于版本问题带来的操作复杂性，使得操作系统自身的维护更加容易。</p>
+<ul>
+<li><h3 id="应用容器化">应用容器化</h3>
+</li>
+</ul>
+<p>在 CoreOS 中，所有应用程序都被装在一个个 Docker 容器中，这些容器就像一个个软件代码的集装箱，通过最简单的接口运行在操作系统之上。这意味着它们可以被很轻松的在操作系统和计算机之间转移，就像是在轮船和火车上搬运箱子一样，同时也意味着可以在不中断应用程序的情况下更新操作系统。</p>
+<p>Docker 在开发者将应用部署到云基础架构上时变得日益流行。通过容器化 (containerized) 的运算环境向应用程序提供运算资源，应用程序之间共享系统内核和资源，却互不干涉运行。单个容器的故障能够快速的重启修复，并且容器内的应用故障不会引起整个系统的崩溃。这个思想和浏览器的沙盒是如出一辙的。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">下降到百米，一睹 CoreOS 真容</div></pre></td></tr></table></figure>
+
+<h2 id="CoreOS_的分布式系统服务">CoreOS 的分布式系统服务</h2>
+<p>云的问题，最主要是由集中式到分布式思考方式的转变，分布式服务、分布式部署、分布式管理、分布式数据存储… 而这些都是 CoreOS 带给服务器革命的一部分。</p>
+<p>为了从系统层面上解决这些分布式思维所面临的问题，CoreOS 团队提供了一些重要的工具帮助用户管理 CoreOS 集群以及部署 Docker 容器。</p>
+<ul>
+<li><h3 id="Cloud-init">Cloud-init</h3>
+</li>
+</ul>
+<p>在系统启动时，CoreOS 会读取一个平台定制的用户配置文件 (称为 cloud-config) 完成系统的初始化配置。通过配置中的信息，新启动 CoreOS 服务器将初始化必要的服务进程，并自动发现并指定集群的其他服务器交互信息，然后加入这个集群中。这种基于集群的“自发现”组织方式使得集群管理变得简单且高效。</p>
+<p>通常来说，cloud-config 配置文件至少应当包括服务器所属的集群通信地址，以及启动 etcd 和 fleet 所需服务的参数。用户可以根据需要，在配置中添加更多定制化的服务，使得节点启动后立即成为功能完备的集群成员投入运行。</p>
+<ul>
+<li><h3 id="Etcd">Etcd</h3>
+</li>
+</ul>
+<p>在CoreOS 集群中处于骨架地位的是 etcd。 etcd 是一个分布式 key/value 存储服务，CoreOS 集群中的程序和服务可以通过 etcd 共享信息或做服务发现 。etcd 基于非常著名的 raft 一致性算法：通过选举形式在服务器之中选举 Lead 来同步数据，并以此确保集群之内信息始终一致和可用。etcd 以默认的形式安装于每个 CoreOS 系统之中。在默认的配置下，etcd 使用系统中的两个端口：4001和7001，其中4001提供给外部应用程序以HTTP+Json的形式读写数据，而7001则用作在每个 etcd 之间进行数据同步。用户更可以通过配置 CA Cert让 etcd 以 HTTPS 的方式读写及同步数据，进一步确保数据信息的安全性。</p>
+<ul>
+<li><h3 id="Fleet">Fleet</h3>
+</li>
+</ul>
+<p>fleet 是一个通过 Systemd对CoreOS 集群中进行控制和管理的工具。fleet 与 Systemd 之间通过 D-Bus API 进行交互，每个 fleet agent 之间通过 etcd 服务来注册和同步数据。fleet 提供的功能非常丰富，包括查看集群中服务器的状态、启动或终止 Docker 容器、读取日志内容等。更为重要的是 fleet 可以确保集群中的服务一直处于可用状态。当出现某个通过 fleet 创建的服务在集群中不可用时，如由于某台主机因为硬件或网络故障从集群中脱离时，原本运行在这台服务器中的一系列服务将通过fleet 被重新分配到其他可用服务器中。虽然当前 fleet 还处于非常早期的状态，但是其管理 CoreOS 集群的能力是非常有效的，并且仍然有很大的扩展空间，目前已提供简单的 API 接口供用户集成。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">落地，新的开始</div></pre></td></tr></table></figure>
+
+<p>从下一篇开始我们将从构建一个 CoreOS 集群说起，一步一步来熟悉这个系统的方方面面。</p>
+<h2 id="参考文章">参考文章</h2>
+<ul>
+<li><a href="http://www.oschina.net/p/coreos" target="_blank" rel="external">CoreOS logo服务器操作系统 CoreOS</a></li>
+<li><a href="http://www.egouz.com/topics/7845.html" target="_blank" rel="external">CoreOS:最小化定制版linux系统</a></li>
+<li><a href="http://www.infoq.com/cn/articles/what-is-coreos" target="_blank" rel="external">CoreOS 实战：CoreOS 及管理工具介绍</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-coreos-system-components" target="_blank" rel="external">An Introduction to CoreOS System Components</a></li>
+</ul>
+</div><footer class="post__foot u-cf"><a href="/2014/10/29/walking-on-cloud-creating-coreos-cluster-part-1/#disqus_thread" class="post__foot-link u-fr">0 COMMENTS</a></footer></article><article class="post"><header class="post__head"><span class="post__time">黄博文</span><span class="post__time"> @ </span><time datetime="2014-10-22T12:33:42.000Z" class="post__time">October 22, 2014</time><h1 class="post__title"><a href="/2014/10/22/aws-cert-sample-question/">AWS助理架构师样题解析</a></h1></header><div class="post__main echo"><p>AWS 认证是对其在 AWS 平台上设计、部署和管理应用程序所需的技能和技术知识的一种认可。获得证书有助于证明您使用 AWS 的丰富经验和可信度，同时还能提升您所在的组织熟练使用基于 AWS 云服务应用的整体水平。</p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/AWS/" class="post__tag__link">AWS</a></li><li class="post__tag__item"><a href="/tags/Cloud/" class="post__tag__link">Cloud</a></li></ul><a href="/2014/10/22/aws-cert-sample-question/#more" class="post__more u-fr">READ MORE</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2015 Cloud & DevOps小组</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><a title="Next" href="/page/2/" class="page-menu__link icon-arrow-right"></a></li></menu></footer></body></html>

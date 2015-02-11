@@ -1,0 +1,100 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="Cloud &amp; DevOps" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Cloud - Cloud &amp; DevOps</title><link rel="stylesheet" href="/css/main.css" type="text/css">
+<!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Cloud &amp; DevOps</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><span class="post__time">David Xie</span><span class="post__time"> @ </span><time datetime="2014-12-29T16:00:00.000Z" class="post__time">December 30, 2014</time><h1 class="post__title"><a href="/2014/12/30/kill-containers-in-docker/">Kill containers in Docker</a></h1></header><div class="post__main echo"><p>After using Docker for a while, you may find out there are so many containers in stopped status, and they are not deleted. You can delete them one by one with <code>docker rm</code>, but we are developers, how can we bear this?</p>
+<p>Thank god Docker provides a parameter named <code>-q</code> in <code>docker ps</code> command to just print container IDs on console.</p>
+<ul>
+<li>Delete all stopped containers</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor"># docker rm $(docker ps -f status=stopped -q)</span></div></pre></td></tr></table></figure>
+
+<ul>
+<li>Delete all containers</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># docker rm -f $(docker ps -a -q)</span></div></pre></td></tr></table></figure>
+
+<p>Isn’t it cool? If not, make some alias for this, like</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias drma=docker rm <span class="operator">-f</span> $(docker ps <span class="operator">-a</span> -q)</div></pre></td></tr></table></figure>
+
+<p>That’s how it’s done!</p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Cloud/" class="post__tag__link">Cloud</a></li><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li></ul><a href="/2014/12/30/kill-containers-in-docker/#disqus_thread" class="post__foot-link u-fr">0 COMMENTS</a></footer></article><article class="post"><header class="post__head"><span class="post__time">黄博文</span><span class="post__time"> @ </span><time datetime="2014-10-22T12:33:42.000Z" class="post__time">October 22, 2014</time><h1 class="post__title"><a href="/2014/10/22/aws-cert-sample-question/">AWS助理架构师样题解析</a></h1></header><div class="post__main echo"><p>AWS 认证是对其在 AWS 平台上设计、部署和管理应用程序所需的技能和技术知识的一种认可。获得证书有助于证明您使用 AWS 的丰富经验和可信度，同时还能提升您所在的组织熟练使用基于 AWS 云服务应用的整体水平。</p>
+<a id="more"></a>
+<p>目前亚马逊推出了Solutions Architect,Developer和SysOps Administrator三个方向的认证。每个方向又分为Associate Level(助理级)，Professional Level（专家级）和Master Level（大师级）。当然目前只有Solutions Architect开放了Professional Level,其他层级会逐步开放中。</p>
+<img src="/images/cert_roadmap_Q214_EN.png">
+
+<p>最近在打算备考AWS的Solutions Architect的Associate Level。关于这个考试AWS出了一个考试样题。下载链接：<a href="http://awstrainingandcertification.s3.amazonaws.com/production/AWS_certified_solutions_architect_associate_blueprint.pdf" target="_blank" rel="external">http://awstrainingandcertification.s3.amazonaws.com/production/AWS_certified_solutions_architect_associate_blueprint.pdf</a></p>
+<p>我把样题都做了一遍，并且都尽力找到了答案在AWS文档中的出处。以下是样题和解答。</p>
+<p>Amazon Glacier is designed for: (Choose 2 answers)</p>
+<p>A.active database storage.</p>
+<p>B.infrequently accessed data.</p>
+<p>C.data archives.</p>
+<p>D.frequently accessed data.</p>
+<p>E.cached session data.</p>
+<p>答案：B和C</p>
+<p>出处文档：<a href="http://aws.amazon.com/glacier/?nc2=h_ls" target="_blank" rel="external">http://aws.amazon.com/glacier/?nc2=h_ls</a></p>
+<blockquote>
+<blockquote>
+<p>Amazon Glacier is an extremely low-cost cloud archive storage service that provides secure and durable storage for data archiving and online backup. In order to keep costs low, Amazon Glacier is optimized for data that is infrequently accessed and for which retrieval times of several hours are suitable.</p>
+</blockquote>
+</blockquote>
+<p>Your web application front end consists of multiple EC2 instances behind an Elastic Load Balancer. You<br>configured ELB to perform health checks on these EC2 instances. If an instance fails to pass health<br>checks, which statement will be true?</p>
+<p>A.The instance is replaced automatically by the ELB.</p>
+<p>B.The instance gets terminated automatically by the ELB.</p>
+<p>C.The ELB stops sending traffic to the instance that failed its health check. </p>
+<p>D.The instance gets quarantined by the ELB for root cause analysis.</p>
+<p>答案：C</p>
+<p>出处文档：<a href="http://aws.amazon.com/elasticloadbalancing/?nc2=h_ls" target="_blank" rel="external">http://aws.amazon.com/elasticloadbalancing/?nc2=h_ls</a></p>
+<blockquote>
+<blockquote>
+<p>Elastic Load Balancing ensures that only healthy Amazon EC2 instances receive traffic by detecting unhealthy instances and rerouting traffic across the remaining healthy instances.</p>
+</blockquote>
+</blockquote>
+<p>You are building a system to distribute confidential training videos to employees. Using CloudFront, what<br>method could be used to serve content that is stored in S3, but not publically accessible from S3<br>directly?</p>
+<p>A.Create an Origin Access Identity (OAI) for CloudFront and grant access to the objects in your S3<br>bucket to that OAI.</p>
+<p>B.Add the CloudFront account security group “amazon-cf/amazon-cf-sg” to the appropriate S3 bucket<br>policy.</p>
+<p>C.Create an Identity and Access Management (IAM) User for CloudFront and grant access to the<br>objects in your S3 bucket to that IAM User.</p>
+<p>D.Create a S3 bucket policy that lists the CloudFront distribution ID as the Principal and the target<br>bucket as the Amazon Resource Name (ARN).</p>
+<p>答案：A</p>
+<p>OAI介绍：<a href="http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html" target="_blank" rel="external">http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html</a></p>
+<p>OAI基本上就是专为这个场景引入的。</p>
+<p>Which of the following will occur when an EC2 instance in a VPC (Virtual Private Cloud) with an<br>associated Elastic IP is stopped and started? (Choose 2 answers)</p>
+<p>A.The Elastic IP will be dissociated from the instance</p>
+<p>B.All data on instance-store devices will be lost</p>
+<p>C.All data on EBS (Elastic Block Store) devices will be lost</p>
+<p>D.The ENI (Elastic Network Interface) is detached</p>
+<p>E.The underlying host for the instance is changed</p>
+<p>答案：B E</p>
+<p>这个题难度比较高。可以用排除法，A，C，D肯定不能选，B是对的，那么剩下一个答案只有E了啊。</p>
+<p>In the basic monitoring package for EC2, Amazon CloudWatch provides the following metrics:</p>
+<p>A.web server visible metrics such as number failed transaction<br>requests</p>
+<p>B.operating system visible metrics such as memory utilization</p>
+<p>C.database visible metrics such as number of connections</p>
+<p>D.hypervisor visible metrics such as CPU utilization</p>
+<p>答案：D</p>
+<p>注意题干说的是basic monitoring,A,B,C肯定不对。具体支持的监控指标可见<a href="http://docs.aws.amazon.com/zh_cn/AmazonCloudWatch/latest/DeveloperGuide/ec2-metricscollected.html#ec2-metrics" target="_blank" rel="external">http://docs.aws.amazon.com/zh_cn/AmazonCloudWatch/latest/DeveloperGuide/ec2-metricscollected.html#ec2-metrics</a>。D是唯一接近正确答案的，但是我对hypervisor了解不多，有些迷惑人。</p>
+<p>Which is an operational process performed by AWS for data security?</p>
+<p>A.AES-256 encryption of data stored on any shared storage device</p>
+<p>B.Decommissioning of storage devices using industry-standard practices</p>
+<p>C.Background virus scans of EBS volumes and EBS snapshots</p>
+<p>D.Replication of data across multiple AWS Regions</p>
+<p>E.Secure wiping of EBS data when an EBS volume is unmounted</p>
+<p>答案：B</p>
+<p>具体可以查看 was security whitepaper: <a href="https://media.amazonwebservices.com/pdf/AWS_Security_Whitepaper.pdf" target="_blank" rel="external">https://media.amazonwebservices.com/pdf/AWS_Security_Whitepaper.pdf</a></p>
+<p>Storage Device Decommissioning 小节里面有这么一句话：</p>
+<blockquote>
+<blockquote>
+<p>All decommissioned magnetic storage devices are<br>degaussed and physically destroyed in accordance with industry-standard practices.</p>
+</blockquote>
+</blockquote>
+<p>To protect S3 data from both accidental deletion and accidental overwriting, you should:</p>
+<p>A.enable S3 versioning on the bucket</p>
+<p>B.access S3 data using only signed URLs </p>
+<p>C.disable S3 delete using an IAM bucket policy </p>
+<p>D.enable S3 Reduced Redundancy Storage</p>
+<p>E.enable Multi-Factor Authentication (MFA) protected access</p>
+<p>答案：A</p>
+<p>出处文档:<a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html" target="_blank" rel="external">http://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html</a></p>
+<blockquote>
+<blockquote>
+<p>Versioning-enabled buckets enable you to recover objects from accidental deletion or overwrite. </p>
+</blockquote>
+</blockquote>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/AWS/" class="post__tag__link">AWS</a></li><li class="post__tag__item"><a href="/tags/Cloud/" class="post__tag__link">Cloud</a></li></ul><a href="/2014/10/22/aws-cert-sample-question/#disqus_thread" class="post__foot-link u-fr">0 COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2015 Cloud & DevOps小组</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer></body></html>

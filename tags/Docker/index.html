@@ -1,0 +1,18 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="Cloud &amp; DevOps" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Docker - Cloud &amp; DevOps</title><link rel="stylesheet" href="/css/main.css" type="text/css">
+<!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Cloud &amp; DevOps</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><span class="post__time">David Xie</span><span class="post__time"> @ </span><time datetime="2014-12-29T16:00:00.000Z" class="post__time">December 30, 2014</time><h1 class="post__title"><a href="/2014/12/30/kill-containers-in-docker/">Kill containers in Docker</a></h1></header><div class="post__main echo"><p>After using Docker for a while, you may find out there are so many containers in stopped status, and they are not deleted. You can delete them one by one with <code>docker rm</code>, but we are developers, how can we bear this?</p>
+<p>Thank god Docker provides a parameter named <code>-q</code> in <code>docker ps</code> command to just print container IDs on console.</p>
+<ul>
+<li>Delete all stopped containers</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor"># docker rm $(docker ps -f status=stopped -q)</span></div></pre></td></tr></table></figure>
+
+<ul>
+<li>Delete all containers</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># docker rm -f $(docker ps -a -q)</span></div></pre></td></tr></table></figure>
+
+<p>Isn’t it cool? If not, make some alias for this, like</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alias drma=docker rm <span class="operator">-f</span> $(docker ps <span class="operator">-a</span> -q)</div></pre></td></tr></table></figure>
+
+<p>That’s how it’s done!</p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Cloud/" class="post__tag__link">Cloud</a></li><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li></ul><a href="/2014/12/30/kill-containers-in-docker/#disqus_thread" class="post__foot-link u-fr">0 COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2015 Cloud & DevOps小组</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer></body></html>

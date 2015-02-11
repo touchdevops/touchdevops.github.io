@@ -1,0 +1,27 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="Cloud &amp; DevOps" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Cloud - Cloud &amp; DevOps</title><link rel="stylesheet" href="/css/main.css" type="text/css">
+<!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Cloud &amp; DevOps</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><span class="post__time">黄博文</span><span class="post__time"> @ </span><time datetime="2014-12-26T06:19:34.000Z" class="post__time">December 26, 2014</time><h1 class="post__title"><a href="/2014/12/26/shutdown-ec2-at-certain-time/">定时关闭AWS上的EC2机器实例</a></h1></header><div class="post__main echo"><p>最近一段时间在做一个产品从阿里云向亚马逊云中国区迁移的前期试验。亚马逊中国区并没有开放免费体验账号，使用的每一份资源都要实打实的掏钱。而为了实验我们使用时一般要启动好几台EC2实例。为了不浪费辛辛苦苦赚的钱，特写了一个脚本，在每天晚上6点将所有的EC2实例自动关闭。由于在亚马逊云中关闭的EC2实例是不收费的，只收取少量的存储费用，所以这样节省不少钱。</p>
+<a id="more"></a>
+<p>为了让一台机器可以值守这个任务，所以我们在AWS留一台机器用来定期执行关闭其它机器的命令。关闭EC2的命令主要是使用AWS提供了awscli来实现。</p>
+<p>首先在这台机器上安装awscli。这台机器使用的操作系统是ubuntu 12.04，所以使用其自带的包管理器可以一键安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$ apt-get install awscli</div></pre></td></tr></table></figure>
+
+<p>安装完毕后需要配置aws命令行工具的认证。方式有很多，最简单的是运行<code>aws configure</code>来实现。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$ aws configure </div><div class="line">AWS Access Key ID [None]: YOURACCESSKEY</div><div class="line">AWS Secret Access Key [None]: YOURSECRTKEY</div><div class="line">Default region name [None]: cn-north-<span class="number">1</span></div><div class="line">Default output format [None]: json</div></pre></td></tr></table></figure>
+
+<p>或者你可以在当前用户根目录下的.aws目录中配置认证信息，详情请移步<a href="http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html" target="_blank" rel="external">http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html</a>.</p>
+<p>接下来在当前用户根目录下创建stopinstance.sh文件，并输入以下信息.</p>
+<figure class="highlight text"><figcaption><span>stopinstance.sh</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="shebang">#!/bin/bash</span></div><div class="line">aws ec2 stop-instances --instance-ids i-<span class="number">68726951</span> i-<span class="number">965</span>ca276 i-<span class="number">377</span>a620e i<span class="operator">-d</span>35fa133 i-fe5ca21e</div></pre></td></tr></table></figure>
+
+<p>这就是关闭指定EC2实例的命令，<code>--instance-ids</code>后面跟的就是你的EC2实例的id。</p>
+<p>把该文件权限改为可执行。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">$ chmod +x stopinstance.sh</div></pre></td></tr></table></figure>
+
+<p>最后要让该命令定时执行，那么就要借助<code>crontab</code>这个命令了。</p>
+<p>使用<code>crontab -e</code>来编辑batch文件，在文件最后加上下行.</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">*</span> 18 <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> ~/stopinstance.sh &gt;&gt; ~/shutdown.log</div></pre></td></tr></table></figure>
+
+<p>前五个字段制定命令执行的时间。第一个是分钟，第二个是小时，第三个是每月的哪天，第四个是月份，第五个是每周的哪天。配置相当灵活。</p>
+<p>这句话是描述了一个batch任务，在每天的下午6点执行，会执行stopinstance.sh脚本，并把日志输出到shutdown.log文件中。</p>
+<p>注意使用crontab执行任务时一定要注意当前机器的时区和你期望执行的时间所用时区是否不同。有关crontab和cron命令的进一步使用请移步<a href="http://www.adminschoice.com/crontab-quick-reference" target="_blank" rel="external">http://www.adminschoice.com/crontab-quick-reference</a></p>
+<p>至此，就大功告成了。</p>
+</div><footer class="post__foot u-cf"><a href="/2014/12/26/shutdown-ec2-at-certain-time/#disqus_thread" class="post__foot-link u-fr">0 COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2015 Cloud & DevOps小组</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer></body></html>

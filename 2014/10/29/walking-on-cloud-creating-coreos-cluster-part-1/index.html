@@ -1,0 +1,71 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="Cloud &amp; DevOps" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>行走在云端：构建CoreOS集群 – 第一步 CoreOS俯瞰 - Cloud &amp; DevOps</title><link rel="stylesheet" href="/css/main.css" type="text/css">
+<!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Cloud &amp; DevOps</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><span class="post__time">Lin Fan</span><span class="post__time"> @ </span><time datetime="2014-10-29T00:32:06.000Z" class="post__time">October 29, 2014</time><h1 class="post__title"><a href="/2014/10/29/walking-on-cloud-creating-coreos-cluster-part-1/">行走在云端：构建CoreOS集群 – 第一步 CoreOS俯瞰</a></h1></header><div class="post__main echo"><p><img src="/images/coreos-wordmark-horiz-color.png" alt="CoreOS"></p>
+<p>第一次看到 CoreOS 是在今年7月底关于 CoerOS 首个稳定版本发布的新闻上，当时吸引我的并不是 CoreOS 本身，而是因为这是一个对 Docker 原生支持的系统。而这个系统的名字，连同它的 Logo，在当时并没有给我留下太多的印象。</p>
+<p>直到在后来对 CoreOS 有了更多接触以后，我才渐渐的发现它远不仅是“又一个Linux发行版”那么简单，而是一个与传统 Linux 系统神似而形不同，在理念上颇具颠覆性的操作系统。</p>
+<p>这篇系列教程将关注 CoreOS 系统的这些独到之处，使得没有接触过这个系统的用户能够快速的理解其中功能的精华和推荐的实践方法。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">从万米高空俯瞰，首先引入眼帘是的一个最基本的问题</div></pre></td></tr></table></figure>
+
+<h2 id="CoreOS_是什么">CoreOS 是什么</h2>
+<p>简单的说，它是一种基于 Chrome OS 再定制的轻量级 Linux 发行版本。</p>
+<p>作为一个操作系统，CoreOS 采用了高度精简的系统内核及外围定制，将许多原本需要复杂人工操作或者第三方软件支持的功能在操作系统级别进行了实现，同时剔除了其他对于服务器系统非核心的软件，比如GUI和包管理器。</p>
+<p>特别值得一提的是 CoreOS 对包管理器的态度和 Docker 的原生支持。这是许多习惯了传统 Linux 管理方式的用户在刚接触 CoreOS 时，最不习惯的地方，因为 CoreOS 没有提供现成的包管理工具。一个典型的困惑是：在 CoreOS 安装软件太不方便了。事实上 CoreOS 并不鼓励用户将各种应用软件直接安装在操作系统之上，而是提倡将所有服务运行在单独的应用容器中，由应用容器提供应用所需要的基础功能环境。这种做法将操作系统和应用程序的职责做了更彻底的分离，降低操作系统和应用程序的耦合度，使运行这些服务器的公司可以更快速、更廉价地更新自己的线上业务。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">至上而下，落到千米高空，隐约的看见它的轮廓</div></pre></td></tr></table></figure>
+
+<h2 id="CoreOS_行走在云端">CoreOS 行走在云端</h2>
+<p>毫不夸张的说，CoreOS 是为云而生的操作系统。</p>
+<p>这个“为云而生”包含两层含义。首先，CoreOS 的设计立足点充分的考虑了云端生态系统的分布式部署、大规模伸缩扩展(Scaling)需求，我们将会再后面的内容中充分体会到这一点。另一方面，CoreOS 对特定的云环境也有相当的依赖，其启动配置服务 cloud-init 是需要高度定制化的，CoreOS 官方提供了基于 AZure、AWS、RackSpace、Vagrant、VMWare 等虚拟机或云服务提供商的定制版本，因此本地直接通过 ISO 安装的 CoreOS 则无法获得 cloud-init 相关的功能，比如集群的自发现和fleet的跨主机管理。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">继续打望，来说一个正经事儿</div></pre></td></tr></table></figure>
+
+<h2 id="CoreOS_的用户体验">CoreOS 的用户体验</h2>
+<p>CoreOS 的核心思想来自于 Chrome 浏览器的用户体验：快速启动，后台更新，跨版本无缝更新，每个Tab页采用独立沙盒，单个Tab页崩溃能快速修复，整个浏览器也不会因为单个沙盒进程的崩溃而崩溃。引申到服务器上，试想将一个应用托管在应用容器中的服务从一个服务器转移到另一个服务器上，就像用鼠标将 Tab 页从一个浏览器拖拽到另一个浏览器界面上那样简单。而这些，正是 CoreOS 希望带给每一个用户的体验。</p>
+<ul>
+<li><h3 id="更快的启动速度">更快的启动速度</h3>
+</li>
+</ul>
+<p>因为轻，所以快。做为现代网络的服务器的产物，CoreOS 团队对这个服务器操作系统做了最大的精简，结果不仅使得系统与应用高度分离，更获得了极大的启动速度提升。根据官方数据，其系统运行时内存使用量只有114M，只有常见 Linux 服务器系统的一半略多 (约60%)。</p>
+<p>此外，CoreOS 使用经 Mac 系统 launchd 的启发而开发的 Systemd 作为默认系统启动和服务管理器 (CentOS 7 也使用 Systemd 取代了过去的 SysV 启动服务)。与 SysV 相比，Systemd 不但可以更好的追踪系统进程，而且也具备优秀的并行化处理能力，加之按需启动等特点，并结合 Docker 的快速启动能力，在 CoreOS 集群中大规模部署 Docker Containers 与使用其他操作系统相比在性能上的优势将更加明显。</p>
+<ul>
+<li><h3 id="平滑版本升级">平滑版本升级</h3>
+</li>
+</ul>
+<p>传统的服务器操作系统，包括大多数Linux发行版，每隔几年都会更换。在这期间，开发者会不断用安全补丁和更新完善这个系统，但是不会进行特别大的改动，最终这个操作系统以及其上的软件会慢慢僵化。但是 CoreOS 的思想是成为一个随时可被更新的操作系统，其本身没有跨发布版本升级的概念，而是使用了类似 Arch Linux 的升级通道(Update Channel)和滚动更新的方式，在任何时候系统都能够直接升级成最新的发布版本。甚至在整个更新的过程中，应用程序的运行不会被打断。有了 CoreOS，基础架构会自动升级，就像无需用户操心的 Chrome 浏览器升级一样。</p>
+<p>CoreOS 有两个系统分区 (dual root partition 有些地方翻译为双启动分区，这里实际上应该是系统分区，包括 /bin /sbin /lib 等目录，这些目录都是只读的)。两个分区分别被设置成主动模式和被动模式并在系统运行期间各司其职。主动分区负责系统运行，被动分区负责系统升级。一旦新版本的操作系统被发布，一个完整的系统文件将被下载至被动分区，并在系统下一次重启时从新版本分区启动，原来的被动分区将切换为主动分区，而之前的主动分区则被切换为被动分区。这个个过程中，被更新的机器不需要从负载集群中移除。同时，为了保证其它应用程序不被打断，CoreOS 会通过 Linux cgroups 限制更新过程中的硬盘和网络I/O。</p>
+<p>这里值得一提的是，与传统 Linux 服务器不同，CoreOS 的系统分区被设计成在系统运行期间保持只读状态，这样确保了 CoreOS 的安全性，也进一步体现了 CoreOS 不希望用户将应用软件直接安装在操作系统上的态度。同时，集群内高度一致的系统内核和外围应用版本，简化了由于版本问题带来的操作复杂性，使得操作系统自身的维护更加容易。</p>
+<ul>
+<li><h3 id="应用容器化">应用容器化</h3>
+</li>
+</ul>
+<p>在 CoreOS 中，所有应用程序都被装在一个个 Docker 容器中，这些容器就像一个个软件代码的集装箱，通过最简单的接口运行在操作系统之上。这意味着它们可以被很轻松的在操作系统和计算机之间转移，就像是在轮船和火车上搬运箱子一样，同时也意味着可以在不中断应用程序的情况下更新操作系统。</p>
+<p>Docker 在开发者将应用部署到云基础架构上时变得日益流行。通过容器化 (containerized) 的运算环境向应用程序提供运算资源，应用程序之间共享系统内核和资源，却互不干涉运行。单个容器的故障能够快速的重启修复，并且容器内的应用故障不会引起整个系统的崩溃。这个思想和浏览器的沙盒是如出一辙的。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">下降到百米，一睹 CoreOS 真容</div></pre></td></tr></table></figure>
+
+<h2 id="CoreOS_的分布式系统服务">CoreOS 的分布式系统服务</h2>
+<p>云的问题，最主要是由集中式到分布式思考方式的转变，分布式服务、分布式部署、分布式管理、分布式数据存储… 而这些都是 CoreOS 带给服务器革命的一部分。</p>
+<p>为了从系统层面上解决这些分布式思维所面临的问题，CoreOS 团队提供了一些重要的工具帮助用户管理 CoreOS 集群以及部署 Docker 容器。</p>
+<ul>
+<li><h3 id="Cloud-init">Cloud-init</h3>
+</li>
+</ul>
+<p>在系统启动时，CoreOS 会读取一个平台定制的用户配置文件 (称为 cloud-config) 完成系统的初始化配置。通过配置中的信息，新启动 CoreOS 服务器将初始化必要的服务进程，并自动发现并指定集群的其他服务器交互信息，然后加入这个集群中。这种基于集群的“自发现”组织方式使得集群管理变得简单且高效。</p>
+<p>通常来说，cloud-config 配置文件至少应当包括服务器所属的集群通信地址，以及启动 etcd 和 fleet 所需服务的参数。用户可以根据需要，在配置中添加更多定制化的服务，使得节点启动后立即成为功能完备的集群成员投入运行。</p>
+<ul>
+<li><h3 id="Etcd">Etcd</h3>
+</li>
+</ul>
+<p>在CoreOS 集群中处于骨架地位的是 etcd。 etcd 是一个分布式 key/value 存储服务，CoreOS 集群中的程序和服务可以通过 etcd 共享信息或做服务发现 。etcd 基于非常著名的 raft 一致性算法：通过选举形式在服务器之中选举 Lead 来同步数据，并以此确保集群之内信息始终一致和可用。etcd 以默认的形式安装于每个 CoreOS 系统之中。在默认的配置下，etcd 使用系统中的两个端口：4001和7001，其中4001提供给外部应用程序以HTTP+Json的形式读写数据，而7001则用作在每个 etcd 之间进行数据同步。用户更可以通过配置 CA Cert让 etcd 以 HTTPS 的方式读写及同步数据，进一步确保数据信息的安全性。</p>
+<ul>
+<li><h3 id="Fleet">Fleet</h3>
+</li>
+</ul>
+<p>fleet 是一个通过 Systemd对CoreOS 集群中进行控制和管理的工具。fleet 与 Systemd 之间通过 D-Bus API 进行交互，每个 fleet agent 之间通过 etcd 服务来注册和同步数据。fleet 提供的功能非常丰富，包括查看集群中服务器的状态、启动或终止 Docker 容器、读取日志内容等。更为重要的是 fleet 可以确保集群中的服务一直处于可用状态。当出现某个通过 fleet 创建的服务在集群中不可用时，如由于某台主机因为硬件或网络故障从集群中脱离时，原本运行在这台服务器中的一系列服务将通过fleet 被重新分配到其他可用服务器中。虽然当前 fleet 还处于非常早期的状态，但是其管理 CoreOS 集群的能力是非常有效的，并且仍然有很大的扩展空间，目前已提供简单的 API 接口供用户集成。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">落地，新的开始</div></pre></td></tr></table></figure>
+
+<p>从下一篇开始我们将从构建一个 CoreOS 集群说起，一步一步来熟悉这个系统的方方面面。</p>
+<h2 id="参考文章">参考文章</h2>
+<ul>
+<li><a href="http://www.oschina.net/p/coreos" target="_blank" rel="external">CoreOS logo服务器操作系统 CoreOS</a></li>
+<li><a href="http://www.egouz.com/topics/7845.html" target="_blank" rel="external">CoreOS:最小化定制版linux系统</a></li>
+<li><a href="http://www.infoq.com/cn/articles/what-is-coreos" target="_blank" rel="external">CoreOS 实战：CoreOS 及管理工具介绍</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-coreos-system-components" target="_blank" rel="external">An Introduction to CoreOS System Components</a></li>
+</ul>
+</div><footer class="post__foot u-cf"><a href="/2014/10/29/walking-on-cloud-creating-coreos-cluster-part-1/#disqus_thread" class="post__foot-link u-fr">0 COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2015 Cloud & DevOps小组</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/2014/10/30/build-script-in-gradle/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/2014/10/22/aws-cert-sample-question/" class="page-menu__link icon-arrow-right"></a></li></menu></footer></body></html>
